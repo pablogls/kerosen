@@ -1,6 +1,9 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import MapComponent from '../components/MapComponent';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { GOOGLE_MAPS_APIKEY } from "@env";
+
 
 const HomeMap = () => {
   
@@ -12,13 +15,31 @@ const HomeMap = () => {
       <View style={styles.card}>
 
       <Text style={styles.aPointText}>Punto A</Text>
-      <View style={styles.apoint}>
-      </View>
+
+      <View style={styles.inputContainer}>
+      <GooglePlacesAutocomplete 
+        placeholder='Ingrese un punto...'
+        styles={{
+        container:{
+          flex: 0,
+        },
+        textInput:{
+          fontSize: 18,
+        }
+      }}
+        query={{
+          key: GOOGLE_MAPS_APIKEY,
+          language: "es",
+        }}
+        enablePoweredByContainer={false}
+        minLength={2}
+        nearbyPlacesAPI="GooglePlacesSearch"
+        debounce={400}
+        />
+
+        </View>
 
       <Text style={styles.bPointText}>Punto B</Text>
-
-      <View style={styles.bpoint}>
-      </View>
 
       <View style={styles.calcular}>
       <Text style={styles.calcularText}>Calcular</Text>
@@ -34,16 +55,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-
-  gradient: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    height: 100, 
-
-  },
-
+  
   card: {
     top: "65%",
     width: '100%', 
@@ -58,6 +70,7 @@ const styles = StyleSheet.create({
     elevation: 0,
     alignItems: 'center'
   },
+
   apoint: {
     width: '85%', 
     height: '16%', 
@@ -66,7 +79,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: "#D9D9D9",
     top: "17%"
-
   },
 
   bpoint: {
@@ -89,7 +101,7 @@ const styles = StyleSheet.create({
 
   bPointText: {
     fontSize: 16,
-    top: "39%",
+    top: "35%",
     left: "9%",
     position: 'absolute' 
   },
@@ -109,6 +121,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'white',
     position: 'absolute' 
+  },
+  inputContainer: {
+    width: '85%',
+    height: '80%',
+    top: "18%",
+    flex: 0,
+  },
+  inputContainerb: {
+    width: '85%',
+    height: '16%',
+    top: "27%",
   },
   
   
