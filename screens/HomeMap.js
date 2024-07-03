@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, ScrollView } from "react-native";
 import MapComponent from "../components/MapComponent";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { GOOGLE_MAPS_APIKEY } from "@env";
@@ -10,9 +10,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 const HomeMap = () => {
   return (
     <View style={styles.container}>
+      
       <MapComponent style={styles.map} />
+
       <LinearGradient
-        // Fondo con gradiente lineal
         colors={["rgba(0,0,0,0.8)", "transparent"]}
         style={styles.background}
       />
@@ -36,17 +37,14 @@ const HomeMap = () => {
 
         <Text style={styles.bPointText}>Punto B</Text>
 
-        <View style={styles.inputContainer}>
+        <View style={styles.calcular}>
+          <Text style={styles.calcularText}>Calcular</Text>
+        </View>
+
+        <View style={styles.inputContainerb}>
           <GooglePlacesAutocomplete
             placeholder="Ingrese un punto..."
-            styles={{
-              container: {
-                flex: 0,
-              },
-              textInput: {
-                fontSize: 18,
-              },
-            }}
+            styles={searchBox}
             query={{
               key: GOOGLE_MAPS_APIKEY,
               language: "es",
@@ -58,21 +56,10 @@ const HomeMap = () => {
           />
         </View>
 
-        <View style={styles.calcular}>
-          <Text style={styles.calcularText}>Calcular</Text>
-        </View>
-
-        <View style={styles.inputContainerb}>
+        <View style={styles.inputContainer}>
           <GooglePlacesAutocomplete
             placeholder="Ingrese un punto..."
-            styles={{
-              container: {
-                flex: 0,
-              },
-              textInput: {
-                fontSize: 18,
-              },
-            }}
+            styles={searchBox}
             query={{
               key: GOOGLE_MAPS_APIKEY,
               language: "es",
@@ -108,49 +95,29 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  apoint: {
-    width: "85%",
-    height: "16%",
-    borderRadius: 10,
-    overflow: "hidden",
-    alignItems: "center",
-    backgroundColor: "#D9D9D9",
-    top: "17%",
-  },
-
-  bpoint: {
-    width: "85%",
-    height: "16%",
-    borderRadius: 10,
-    overflow: "hidden",
-    alignItems: "center",
-    backgroundColor: "#D9D9D9",
-    top: "30%",
-  },
-
   aPointText: {
     fontSize: 16,
-    top: "10%",
+    top: 45,
     left: "9%",
     position: "absolute",
   },
 
   bPointText: {
     fontSize: 16,
-    top: "35%",
+    top: 125,
     left: "9%",
     position: "absolute",
   },
 
   calcular: {
-    width: "50%",
-    height: "15%",
+    width: 200,
+    height: 60,
     borderRadius: 10,
     overflow: "hidden",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "black",
-    bottom: "18%",
+    top: 220,
   },
 
   calcularText: {
@@ -160,16 +127,16 @@ const styles = StyleSheet.create({
   },
 
   inputContainer: {
-    width: "85%",
-    height: "80%",
-    top: "18%",
+    width: 350,
+    height: 200,
+    top: 10,
     flex: 0,
   },
 
   inputContainerb: {
-    width: "85%",
-    height: "16%",
-    top: "42%",
+    width: 350,
+    height: 120,
+    top: 150,
     position: "absolute",
   },
 
@@ -200,6 +167,23 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "10%",
   },
+});
+
+const searchBox = StyleSheet.create({
+  container: {
+    flex: 0,
+  },
+
+  textInput: {
+    backgroundColor: "#DDDDDF",
+    borderRadius: 10,
+    fontSize: 18,
+  },
+
+  textInputContainer: {
+    paddingHorizontal: 0,
+  }
+
 });
 
 export default HomeMap;
