@@ -4,7 +4,7 @@ import MapComponent from "../components/MapComponent";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { GOOGLE_MAPS_APIKEY } from "@env";
 import { LinearGradient } from "expo-linear-gradient";
-import { faCalculator, faGear } from "@fortawesome/free-solid-svg-icons";
+import { faCalculator, faCrosshairs, faGear } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
 const HomeMap = () => {
@@ -31,6 +31,19 @@ const HomeMap = () => {
           style={{ ...styles.gearIcon, color: "white" }}
         />
       </View>
+
+      {/* <View style={styles.currentLocation}>
+
+      <FontAwesomeIcon
+          icon={faCrosshairs}
+          size={35}
+          style={{ color: "#7E7E7E" }}
+        />
+
+
+
+
+      </View> */}
 
       <View style={styles.card}>
         <Text style={styles.aPointText}>Punto A</Text>
@@ -167,6 +180,18 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "10%",
   },
+
+  currentLocation: {
+    backgroundColor: "#FFFFFF",
+    height: 60,
+    width: 60,
+    bottom: 320,
+    left: 300,
+    borderRadius: 40,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+
 });
 
 const searchBox = StyleSheet.create({
