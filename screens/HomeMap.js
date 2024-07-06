@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { StyleSheet, View, Text, ScrollView } from "react-native";
 import MapComponent from "../components/MapComponent";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
@@ -8,10 +8,23 @@ import { faCalculator, faCrosshairs, faGear } from "@fortawesome/free-solid-svg-
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
 const HomeMap = () => {
+  const [locationA, setlocationA] = useState(null);
+  const [locationB, setlocationB] = useState(null);
+
+  const handleSelectlocationA = (data, details) => {
+    const { lat, lng } = details.geometry.location;
+    setlocationA({ lat, lng });
+  };
+
+  const handleSelectlocationB = (data, details) => {
+    const { lat, lng } = details.geometry.location;
+    setlocationB({ lat, lng });
+  };
+  
   return (
     <View style={styles.container}>
       
-      <MapComponent style={styles.map} />
+      <MapComponent locationA={locationA} locationB={locationB} setlocationA={setlocationA} setlocationB={setlocationB}/>
 
       <LinearGradient
         colors={["rgba(0,0,0,0.8)", "transparent"]}
@@ -66,6 +79,10 @@ const HomeMap = () => {
             minLength={2}
             nearbyPlacesAPI="GooglePlacesSearch"
             debounce={400}
+            onPress={handleSelectlocationB}
+            fetchDetails={true}
+
+
           />
         </View>
 
@@ -81,6 +98,9 @@ const HomeMap = () => {
             minLength={2}
             nearbyPlacesAPI="GooglePlacesSearch"
             debounce={400}
+            onPress={handleSelectlocationA}
+            fetchDetails={true}
+
           />
         </View>
       </View>
