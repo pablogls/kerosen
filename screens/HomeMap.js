@@ -8,23 +8,23 @@ import { faCalculator, faCrosshairs, faGear } from "@fortawesome/free-solid-svg-
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
 const HomeMap = () => {
-  const [locationA, setlocationA] = useState(null);
-  const [locationB, setlocationB] = useState(null);
+  const [locationA, setLocationA] = useState(null);
+  const [locationB, setLocationB] = useState(null);
 
   const handleSelectlocationA = (data, details) => {
     const { lat, lng } = details.geometry.location;
-    setlocationA({ lat, lng });
+    setLocationA({ lat, lng });
   };
 
   const handleSelectlocationB = (data, details) => {
     const { lat, lng } = details.geometry.location;
-    setlocationB({ lat, lng });
+    setLocationB({ lat, lng });
   };
   
   return (
     <View style={styles.container}>
       
-      <MapComponent locationA={locationA} locationB={locationB} setlocationA={setlocationA} setlocationB={setlocationB}/>
+      <MapComponent locationA={locationA} locationB={locationB} setLocationA={setLocationA} setLocationB={setLocationB}/>
 
       <LinearGradient
         colors={["rgba(0,0,0,0.8)", "transparent"]}

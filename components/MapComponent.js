@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import MapViewDirections from 'react-native-maps-directions';
 import { GOOGLE_MAPS_APIKEY } from "@env";
 
-const MapComponent = ({ locationA, locationB, setlocationA, setlocationB }) => {
+const MapComponent = ({ locationA, locationB, setLocationA, setLocationB }) => {
   const [location, setLocation] = useState(null);
+  const [duration, setDuration] = useState(null);
+  const [distance, setDistance] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -28,7 +30,6 @@ const MapComponent = ({ locationA, locationB, setlocationA, setlocationB }) => {
 
   useEffect(() => {
     if (locationA || locationB) {
-      // Centra el mapa en la primera ubicación disponible
       setLocation(prevLocation => ({
         ...prevLocation,
         latitude: locationA ? locationA.lat : locationB.lat,
@@ -44,6 +45,7 @@ const MapComponent = ({ locationA, locationB, setlocationA, setlocationB }) => {
         mapType="mutedStandard"
         region={location}
         showsUserLocation={true}
+      userLocationAnnotationTitle="Tu ubicación"
       >
         {locationA && (
           <Marker
@@ -73,20 +75,18 @@ const MapComponent = ({ locationA, locationB, setlocationA, setlocationB }) => {
             })}
           />
         )}
-        {calculateRoute && locationA && locationB && (
+        {locationA && locationB && (
           <MapViewDirections
-            origin={{ latitude: locationA.lat, longitude: locationA.lng }}
-            destination={{ latitude: locationB.lat, longitude: locationB.lng }}
+            origin={{latitude: locationA.lat, longitude: locationA.lng}}
+            destination={{latitude: locationB.lat, longitude: locationB.lng}}
             apikey={GOOGLE_MAPS_APIKEY}
-            strokeWidth={3}
-            strokeColor="hotpink"
+            strokeWidth={4}
+            strokeColor="black"
             onReady={result => {
+              setDuration(result.duration);
+              setDistance(result.distance);
+              console.log(`Duration: ${result.duration} minutes`);
               console.log(`Distance: ${result.distance} km`);
-              console.log(`Duration: ${result.duration} min.`);
-            }}
-            onError={errorMessage => {
-              console.error('Error al calcular la ruta: ', errorMessage);
-              Alert.alert('Error', 'No se pudo calcular la ruta');
             }}
           />
         )}
