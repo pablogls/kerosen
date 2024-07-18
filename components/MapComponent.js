@@ -5,10 +5,8 @@ import * as Location from "expo-location";
 import MapViewDirections from 'react-native-maps-directions';
 import { GOOGLE_MAPS_APIKEY } from "@env";
 
-const MapComponent = ({ locationA, locationB, setLocationA, setLocationB }) => {
+const MapComponent = ({ locationA, locationB, setLocationA, setLocationB, setDistance, setDuration }) => {
   const [location, setLocation] = useState(null);
-  const [duration, setDuration] = useState(null);
-  const [distance, setDistance] = useState(null);
 
   useEffect(() => {
     (async () => {

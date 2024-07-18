@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import { StyleSheet, View, Text, ScrollView } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, View, Text, Modal, TextInput, Button } from "react-native";
 import MapComponent from "../components/MapComponent";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { GOOGLE_MAPS_APIKEY } from "@env";
@@ -10,6 +10,31 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 const HomeMap = () => {
   const [locationA, setLocationA] = useState(null);
   const [locationB, setLocationB] = useState(null);
+  const [literPrice, setLiterPrice] = useState(null);
+  const [literAvrg, setLiterAvrg] = useState(null);
+  const [literModal, setLiterModal] = useState(true);
+  const [calculateModal, setCalculateModal] = useState(false);
+  const [distance, setDistance] = useState(null);
+  const [duration, setDuration] = useState(null);
+
+  const handleCalculate = () => {
+    if (literPrice === null || literAvrg === null) {
+      setLiterModal(true);
+    } else {
+      setCalculateModal(true);
+    }
+  };
+
+  const calculateCost = () => {
+    if (distance && literAvrg && literPrice) {
+      return ((distance / literAvrg) * literPrice).toFixed(2);
+    }
+    return "Error";
+  };
+
+  const handleSaveValues = () => {
+    setLiterModal(false);
+  };
 
   const handleSelectlocationA = (data, details) => {
     const { lat, lng } = details.geometry.location;
@@ -20,11 +45,17 @@ const HomeMap = () => {
     const { lat, lng } = details.geometry.location;
     setLocationB({ lat, lng });
   };
-  
+
   return (
     <View style={styles.container}>
-      
-      <MapComponent locationA={locationA} locationB={locationB} setLocationA={setLocationA} setLocationB={setLocationB}/>
+      <MapComponent
+        locationA={locationA}
+        locationB={locationB}
+        setLocationA={setLocationA}
+        setLocationB={setLocationB}
+        setDistance={setDistance}
+        setDuration={setDuration}
+      />
 
       <LinearGradient
         colors={["rgba(0,0,0,0.8)", "transparent"]}
@@ -63,7 +94,7 @@ const HomeMap = () => {
 
         <Text style={styles.bPointText}>Punto B</Text>
 
-        <View style={styles.calcular}>
+        <View style={styles.calcular} onTouchEnd={handleCalculate}>
           <Text style={styles.calcularText}>Calcular</Text>
         </View>
 
@@ -81,8 +112,6 @@ const HomeMap = () => {
             debounce={400}
             onPress={handleSelectlocationB}
             fetchDetails={true}
-
-
           />
         </View>
 
@@ -100,10 +129,61 @@ const HomeMap = () => {
             debounce={400}
             onPress={handleSelectlocationA}
             fetchDetails={true}
-
           />
         </View>
       </View>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={literModal}
+        onRequestClose={() => {
+          setLiterModal(false);
+        }}
+      >
+        <View style={styles.modalView}>
+          <Text style={styles.modalText}>Ingrese los valores</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Precio por litro"
+            keyboardType="numeric"
+            value={literPrice}
+            onChangeText={setLiterPrice}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Promedio de litros"
+            keyboardType="numeric"
+            value={literAvrg}
+            onChangeText={setLiterAvrg}
+          />
+          <Button
+            style={styles.guardar}
+            title="Guardar"
+            onPress={handleSaveValues}
+          />
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={calculateModal}
+        onRequestClose={() => {
+          setCalculateModal(false);
+        }}
+      >
+        <View style={styles.modalView}>
+          <Text style={styles.modalText}>
+            El cálculo de costo es: {calculateCost()}
+          </Text>
+          <Button
+            style={styles.guardar}
+            title="Cerrar"
+            onPress={() => setCalculateModal(false)}
+          />
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -209,9 +289,38 @@ const styles = StyleSheet.create({
     left: 300,
     borderRadius: 40,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
-
+  modalView: {
+    margin: 20,
+    top: 70,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 20,
+  },
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+    width: "80%",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+  },
+  guardar: {
+    backgroundColor: "black",
+  },
 });
 
 const searchBox = StyleSheet.create({
@@ -227,8 +336,7 @@ const searchBox = StyleSheet.create({
 
   textInputContainer: {
     paddingHorizontal: 0,
-  }
-
+  },
 });
 
 export default HomeMap;
