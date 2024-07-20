@@ -78,7 +78,7 @@ const MapComponent = ({ locationA, locationB, setLocationA, setLocationB, setDis
             origin={{latitude: locationA.lat, longitude: locationA.lng}}
             destination={{latitude: locationB.lat, longitude: locationB.lng}}
             apikey={GOOGLE_MAPS_APIKEY}
-            strokeWidth={4}
+            strokeWidth={6}
             strokeColor="black"
             onReady={result => {
               setDuration(result.duration);

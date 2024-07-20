@@ -6,6 +6,7 @@ import { GOOGLE_MAPS_APIKEY } from "@env";
 import { LinearGradient } from "expo-linear-gradient";
 import { faCalculator, faCrosshairs, faGear } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { showMessage } from "react-native-flash-message";
 
 const HomeMap = () => {
   const [locationA, setLocationA] = useState(null);
@@ -18,6 +19,16 @@ const HomeMap = () => {
   const [duration, setDuration] = useState(null);
 
   const handleCalculate = () => {
+    if (locationA === null || locationB === null) {
+      showMessage({
+        message: 'Error',
+        description: 'Seleccione ambos puntos',
+        type: 'danger',
+        duration: 3005,
+      });
+      return;
+    }
+
     if (literPrice === null || literAvrg === null) {
       setLiterModal(true);
     } else {
@@ -157,16 +168,14 @@ const HomeMap = () => {
             value={literAvrg}
             onChangeText={setLiterAvrg}
           />
-          <Button
-            style={styles.guardar}
-            title="Guardar"
-            onPress={handleSaveValues}
-          />
+        <View style={styles.guardar} onTouchEnd={handleSaveValues} >
+          <Text style={styles.calcularText}>Guardar</Text>
+        </View>
         </View>
       </Modal>
 
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent={true}
         visible={calculateModal}
         onRequestClose={() => {
@@ -175,13 +184,11 @@ const HomeMap = () => {
       >
         <View style={styles.modalView}>
           <Text style={styles.modalText}>
-            El cálculo de costo es: {calculateCost()}
+          El precio aproximado es de: ${Math.round(calculateCost()).toLocaleString().replace(/,/g, '.')}
           </Text>
-          <Button
-            style={styles.guardar}
-            title="Cerrar"
-            onPress={() => setCalculateModal(false)}
-          />
+          <View style={styles.guardar} onTouchEnd={() => setCalculateModal(false)}>
+          <Text style={styles.calcularText}>Cerrar</Text>
+        </View>
         </View>
       </Modal>
     </View>
@@ -310,16 +317,24 @@ const styles = StyleSheet.create({
   input: {
     height: 40,
     margin: 12,
-    borderWidth: 1,
     padding: 10,
     width: "80%",
+    backgroundColor: "#DDDDDF",
+    borderRadius: 7,
   },
   modalText: {
-    marginBottom: 15,
+    fontSize: 16,
     textAlign: "center",
   },
   guardar: {
+    width: 110,
+    height: 50,
+    borderRadius: 10,
+    overflow: "hidden",
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: "black",
+    top: 10
   },
 });
 
