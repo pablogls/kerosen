@@ -44,6 +44,7 @@ const MapComponent = ({ locationA, locationB, setLocationA, setLocationB, setDis
         region={location}
         showsUserLocation={true}
       userLocationAnnotationTitle="Tu ubicación"
+      userInterfaceStyle="dark"
       >
         {locationA && (
           <Marker

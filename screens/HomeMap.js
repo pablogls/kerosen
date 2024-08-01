@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Text, Modal, TextInput, Button } from "react-native";
+import { StyleSheet, View, Text, Modal, TextInput, TouchableOpacity  } from "react-native";
 import MapComponent from "../components/MapComponent";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { GOOGLE_MAPS_APIKEY } from "@env";
@@ -7,6 +7,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import { faCalculator, faCrosshairs, faGear } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { showMessage } from "react-native-flash-message";
+import * as Location from "expo-location";
+
 
 const HomeMap = () => {
   const [locationA, setLocationA] = useState(null);
@@ -17,6 +19,7 @@ const HomeMap = () => {
   const [calculateModal, setCalculateModal] = useState(false);
   const [distance, setDistance] = useState(null);
   const [duration, setDuration] = useState(null);
+  const [locationAText, setLocationAText] = useState('');
 
   const handleCalculate = () => {
     if (locationA === null || locationB === null) {
@@ -57,6 +60,21 @@ const HomeMap = () => {
     setLocationB({ lat, lng });
   };
 
+  const setCurrentLocationA = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      console.log('Permiso denegado');
+      return;
+    }
+
+    let currentLocation = await Location.getCurrentPositionAsync({});
+    setLocationA({
+      lat: currentLocation.coords.latitude,
+      lng: currentLocation.coords.longitude,
+    });
+    setLocationAText('Ubicación actual');
+  };
+
   return (
     <View style={styles.container}>
       <MapComponent
@@ -66,6 +84,7 @@ const HomeMap = () => {
         setLocationB={setLocationB}
         setDistance={setDistance}
         setDuration={setDuration}
+        setCurrentLocationA={setCurrentLocationA}
       />
 
       <LinearGradient
@@ -87,18 +106,14 @@ const HomeMap = () => {
         />
       </View>
 
-      {/* <View style={styles.currentLocation}>
-
-      <FontAwesomeIcon
+      <TouchableOpacity style={styles.currentLocation} onPress={setCurrentLocationA}>
+        <FontAwesomeIcon
           icon={faCrosshairs}
           size={35}
           style={{ color: "#7E7E7E" }}
         />
+      </TouchableOpacity>
 
-
-
-
-      </View> */}
 
       <View style={styles.card}>
         <Text style={styles.aPointText}>Punto A</Text>
@@ -140,6 +155,9 @@ const HomeMap = () => {
             debounce={400}
             onPress={handleSelectlocationA}
             fetchDetails={true}
+            textInputProps={{
+              value: locationAText
+            }}
           />
         </View>
       </View>
@@ -293,10 +311,11 @@ const styles = StyleSheet.create({
     height: 60,
     width: 60,
     bottom: 320,
-    left: 300,
+    left: 330,
     borderRadius: 40,
     justifyContent: "center",
     alignItems: "center",
+    position: "absolute"
   },
   modalView: {
     margin: 20,
